@@ -34,7 +34,6 @@
     },
     "branch": {
       "type": "string"
-      }
     },
     "location": {
       "type": "string",

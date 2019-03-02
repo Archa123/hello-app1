@@ -3,19 +3,10 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "storageAcctType": {
-      "type": "string",
-      "defaultValue": "Standard_LRS",
-      "allowedValues": [
-        "Standard_LRS",
-        "Standard_ZRS",
-        "Standard_GRS",
-        "Standard_RAGRS",
-        "Premium_LRS"
-      ]
+      "type": "string"
     },
     "hostingPlanName": {
-      "type": "string",
-      "minLength": 1
+      "type": "string"
     },
     "hostingPlanSkuName": {
       "type": "string",
@@ -39,17 +30,10 @@
       }
     },
     "repoURL": {
-      "type": "string",
-      "defaultValue": "https://github.com/Archa123/hello-app1.git",
-      "metadata": {
-        "description": "The URL for the GitHub repository that contains the project to deploy."
-      }
+      "type": "string"
     },
     "branch": {
-      "type": "string",
-      "defaultValue": "master",
-      "metadata": {
-        "description": "The branch of the GitHub repository to use."
+      "type": "string"
       }
     },
     "location": {

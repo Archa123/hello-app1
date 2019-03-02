@@ -1,3 +1,7 @@
+
+[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
+
+
 # HttpTrigger - C<span>#</span>
 
 The `HttpTrigger` makes it incredibly easy to have your functions executed via an HTTP call to your function.

@@ -1,8 +1,6 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0"
     "parameters": {
-        "AppName": {
+        "siteName": {
             "type": "string"
         },
         "repoUrl": {
@@ -13,30 +11,16 @@
         }
     },
     "variables": {
-        "storageName": "[concat('cwa', uniqueString(parameters('siteName'), resourceGroup().id))]",
-        "topicname": "cwaeventtopic"
+        "storageName": "[concat('CWA', uniqueString(parameters('siteName'), resourceGroup().id))]",
+        "eeventGridTopicName": "[concat('CWA', uniqueString(parameters('siteName'), resourceGroup().id))]"
     },
     "resources": [
-        {
-            "apiVersion": "2015-05-01-preview",
-            "type": "Microsoft.Storage/storageAccounts",
-            "name": "[variables('storageName')]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "accountType": "Standard_LRS"
-            }
-        },
-        {
-        "name": "[variables('topicname')]",
-        "type": "Microsoft.EventGrid/topics",
-        "location": "[parameters('location')]",
-        "apiVersion": "2018-01-01"
-        },
         {
             "name": "[parameters('siteName')]",
             "type": "Microsoft.Web/sites",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
+                "[resourceId('microsoft.insights/components/', parameters('siteName'))]"
             ],
             "properties": {
                 "siteConfig": {
@@ -64,6 +48,14 @@
                         {
                             "name": "WEBSITE_NODE_DEFAULT_VERSION",
                             "value": "6.5.0"
+                        },
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId('microsoft.insights/components/', parameters('siteName')), '2015-05-01').InstrumentationKey]"
+                        },
+                        {
+                            "name": "MyTable",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2015-05-01-preview').key1)]"
                         },
                         {
                             "name": "ROUTING_EXTENSION_VERSION",
@@ -104,6 +96,36 @@
             "apiVersion": "2016-03-01",
             "location": "[resourceGroup().location]",
             "kind": "functionapp"
-        }
-    ]
+        },
+        {
+            "apiVersion": "2015-05-01-preview",
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('storageName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "accountType": "Standard_LRS"
+            }
+        },
+        {
+            "apiVersion": "2015-05-01",
+            "name": "[parameters('siteName')]",
+            "type": "microsoft.insights/components",
+            "location": "East US",
+            "tags": {
+                "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('siteName'))]": "Resource"
+            },
+            "properties": {
+                "ApplicationId": "[parameters('siteName')]",
+                "Request_Source": "IbizaWebAppExtensionCreate"
+            }
+        },
+         {
+        "name": "[veriables('eventGridTopicName')]",
+        "type": "Microsoft.EventGrid/topics",
+        "location": "[parameters('location')]",
+        "apiVersion": "2018-01-01"
+      }
+    ],
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0"
 }

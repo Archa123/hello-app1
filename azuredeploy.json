@@ -19,7 +19,6 @@
     },
     "repoURL": {
       "type": "string",
-      "defaultValue": "https://github.com/Archa123/hello-app1.git",
       "metadata": {
         "description": "The URL for the GitHub repository that contains the project to deploy."
       }
@@ -89,7 +88,7 @@
       "kind": "functionapp",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
-        //"[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAcctType'))]"
+       
       ],
       "tags": {
         "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName')))]": "Resource",
@@ -117,7 +116,7 @@
           },
           {
             "name": "FUNCTIONS_EXTENSION_VERSION",
-            "value": "~1"
+            "value": "~2"
           },
           {
             "name": "WEBSITE_NODE_DEFAULT_VERSION",
